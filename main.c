@@ -9,7 +9,7 @@
 *
 *
 *******************************************************************************
-* Copyright 2020-2021, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2020-2022, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -65,21 +65,34 @@
  */
 #define ADC_EXAMPLE_MODE SINGLE_CHANNEL
 
+#if defined(CY_DEVICE_PSOC6A512K)  /* if the target is CY8CPROTO-062S3-4343W */
 /* Channel 0 input pin */
-#define VPLUS_CHANNEL_0             (P10_0)
+#define VPLUS_CHANNEL_0  (P10_3)
+#else 
+#define VPLUS_CHANNEL_0  (P10_0)
+#endif
 
 #if ADC_EXAMPLE_MODE == MULTI_CHANNEL
 
 /* Channel 1 VPLUS input pin */
-#define VPLUS_CHANNEL_1             (P10_1)
+#define VPLUS_CHANNEL_1  (P10_4)
 
 /* Channel 1 VREF input pin */
-#define VREF_CHANNEL_1              (P10_2)
+#define VREF_CHANNEL_1   (P10_5)
 
 /* Number of scans every time ADC read is initiated */
 #define NUM_SCAN                    (1)
 
 #endif /* ADC_EXAMPLE_MODE == MULTI_CHANNEL */
+
+/* Conversion factor */
+#define MICRO_TO_MILLI_CONV_RATIO        (1000u)
+
+/* Acquistion time in nanosecond */
+#define ACQUISITION_TIME_NS              (1000u)
+
+/* ADC Scan delay in millisecond */
+#define ADC_SCAN_DELAY_MS                (200u)
 
 /*******************************************************************************
 *       Enumerated Types
@@ -168,6 +181,14 @@ int main(void)
     /* Variable to capture return value of functions */
     cy_rslt_t result;
 
+#if defined(CY_DEVICE_SECURE)
+    cyhal_wdt_t wdt_obj;
+    /* Clear watchdog timer so that it doesn't trigger a reset */
+    result = cyhal_wdt_init(&wdt_obj, cyhal_wdt_get_max_timeout_ms());
+    CY_ASSERT(CY_RSLT_SUCCESS == result);
+    cyhal_wdt_free(&wdt_obj);
+#endif
+
     /* Initialize the device and board peripherals */
     result = cybsp_init();
     
@@ -233,7 +254,7 @@ int main(void)
 #endif /* ADC_EXAMPLE_MODE == MULTI_CHANNEL */
 
         /* 200ms delay between scans */
-        cyhal_system_delay_ms(200);
+        cyhal_system_delay_ms(ADC_SCAN_DELAY_MS);
     }
 }
 
@@ -259,7 +280,7 @@ void adc_multi_channel_init(void)
     /* Variable to capture return value of functions */
     cy_rslt_t result;
 
-    /* Initialize ADC. The ADC block which can connect to pin 10[0] is selected */
+    /* Initialize ADC. The ADC block which can connect to the channel 0 input pin is selected */
     result = cyhal_adc_init(&adc_obj, VPLUS_CHANNEL_0, NULL);
     if(result != CY_RSLT_SUCCESS)
     {
@@ -270,10 +291,10 @@ void adc_multi_channel_init(void)
     /* ADC channel configuration */
     const cyhal_adc_channel_config_t channel_config = {
             .enable_averaging = false,  // Disable averaging for channel
-            .min_acquisition_ns = 1000, // Minimum acquisition time set to 1us
+            .min_acquisition_ns = ACQUISITION_TIME_NS, // Minimum acquisition time set to 1us
             .enabled = true };          // Sample this channel when ADC performs a scan
 
-    /* Initialize a channel 0 and configure it to scan P10_0 in single ended mode. */
+    /* Initialize a channel 0 and configure it to scan the channel 0 input pin in single ended mode. */
     result  = cyhal_adc_channel_init_diff(&adc_chan_0_obj, &adc_obj, VPLUS_CHANNEL_0,
                                           CYHAL_ADC_VNEG, &channel_config);
     if(result != CY_RSLT_SUCCESS)
@@ -286,7 +307,7 @@ void adc_multi_channel_init(void)
      * For multichannel configuration use to same channel configuration structure
      * "channel_config" to configure the second channel.
      * For second channel to be set to differential mode, two inputs from Pins
-     * 10.1 and 10.2 are configured to be inputs.
+     * channel 1 input pin and channel 1 voltage reference pin are configured to be inputs.
      *
      */
 
@@ -306,11 +327,11 @@ void adc_multi_channel_init(void)
      cyhal_adc_enable_event(&adc_obj, CYHAL_ADC_ASYNC_READ_COMPLETE, CYHAL_ISR_PRIORITY_DEFAULT, true);
 
      printf("ADC is configured in multichannel configuration.\r\n\n");
-     printf("Channel 0 is configured in single ended mode, connected to pin \r\n");
-     printf("P10_0. Provide input voltage at P10_0\r\n");
-     printf("Channel 1 is configured in differential mode, connected to pin \r\n");
-     printf("P10_1 and P10_2. Provide input voltage at P10_1 and reference \r\n");
-     printf("voltage at P10_2\r\n\n");
+     printf("Channel 0 is configured in single ended mode, connected to the \r\n");
+     printf("channel 0 input pin. Provide input voltage at the channel 0 input pin \r\n");
+     printf("Channel 1 is configured in differential mode, connected to the \r\n");
+     printf("channel 1 input pin and channel 1 voltage reference pin. Provide input voltage at the channel 1 input pin and reference \r\n");
+     printf("voltage at the Channel 1 voltage reference pin \r\n\n");
 }
 
 /*******************************************************************************
@@ -353,8 +374,8 @@ void adc_multi_channel_process(void)
      * microvolts. Convert it millivolts and print input voltage
      *
      */
-    adc_result_0 = result_arr[CHANNEL_0]/1000;
-    adc_result_1 = result_arr[CHANNEL_1]/1000;
+    adc_result_0 = result_arr[CHANNEL_0] / MICRO_TO_MILLI_CONV_RATIO;
+    adc_result_1 = result_arr[CHANNEL_1] / MICRO_TO_MILLI_CONV_RATIO;
     printf("Channel 0 input: %4ldmV \t Channel 1 input: %4ldmV\r\n", (long int)adc_result_0, (long int)adc_result_1);
 
     /* Clear async read complete flag */
@@ -409,7 +430,7 @@ void adc_single_channel_init(void)
     /* Variable to capture return value of functions */
     cy_rslt_t result;
 
-    /* Initialize ADC. The ADC block which can connect to pin 10[0] is selected */
+    /* Initialize ADC. The ADC block which can connect to the channel 0 input pin is selected */
     result = cyhal_adc_init(&adc_obj, VPLUS_CHANNEL_0, NULL);
     if(result != CY_RSLT_SUCCESS)
     {
@@ -420,10 +441,10 @@ void adc_single_channel_init(void)
     /* ADC channel configuration */
     const cyhal_adc_channel_config_t channel_config = {
             .enable_averaging = false,  // Disable averaging for channel
-            .min_acquisition_ns = 1000, // Minimum acquisition time set to 1us
+            .min_acquisition_ns = ACQUISITION_TIME_NS, // Minimum acquisition time set to 1us
             .enabled = true };          // Sample this channel when ADC performs a scan
 
-    /* Initialize a channel 0 and configure it to scan P10_0 in single ended mode. */
+    /* Initialize a channel 0 and configure it to scan the channel 0 input pin in single ended mode. */
     result  = cyhal_adc_channel_init_diff(&adc_chan_0_obj, &adc_obj, VPLUS_CHANNEL_0,
                                           CYHAL_ADC_VNEG, &channel_config);
     if(result != CY_RSLT_SUCCESS)
@@ -433,7 +454,7 @@ void adc_single_channel_init(void)
     }
 
     printf("ADC is configured in single channel configuration\r\n\n");
-    printf("Provide input voltage at pin P10_0. \r\n\n");
+    printf("Provide input voltage at the channel 0 input pin. \r\n\n");
 }
 
 /*******************************************************************************
@@ -457,7 +478,7 @@ void adc_single_channel_process(void)
     int32_t adc_result_0 = 0;
 
     /* Read input voltage, convert it to millivolts and print input voltage */
-    adc_result_0 = cyhal_adc_read_uv(&adc_chan_0_obj)/1000;
+    adc_result_0 = cyhal_adc_read_uv(&adc_chan_0_obj) / MICRO_TO_MILLI_CONV_RATIO;
     printf("Channel 0 input: %4ldmV\r\n", (long int)adc_result_0);
 }
 
