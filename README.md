@@ -1,12 +1,12 @@
-# PSoC&trade; 6 MCU: ADC Using HAL
+# HAL: ADC using HAL
 
-This code example demonstrates the use of the [ADC HAL](https://infineon.github.io/mtb-hal-cat1/html/group__group__hal__adc.html) driver to perform voltage measurements. In this example, the ADC HAL driver is configured to sample input voltage periodically and display the sampled voltage on the UART. By default, the ADC is configured to use one channel in single ended mode.
+This code example demonstrates the use of the [ADC HAL](https://infineon.github.io/mtb-hal-cat1/html/group__group__hal__adc.html) driver to perform voltage measurements. In this example, the ADC HAL driver is configured to sample input voltage periodically and display the sampled voltage on the UART. By default, the ADC is configured to use one channel in single-ended mode.
 
 This example also demonstrates the multichannel configuration of the ADC HAL driver, which performs asynchronous reads from multiple channels. In this case, two channels are used. The first channel is configured in single-ended mode and the second channel is configured in differential mode.
 
-[View this README on GitHub.](https://github.com/Infineon/mtb-example-psoc6-adc-basic)
+[View this README on GitHub.](https://github.com/Infineon/mtb-example-hal-adc-basic)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzE0NTEiLCJTcGVjIE51bWJlciI6IjAwMi0zMTQ1MSIsIkRvYyBUaXRsZSI6IlBTb0MmdHJhZGU7IDYgTUNVOiBBREMgVXNpbmcgSEFMIiwicmlkIjoidmFpciIsIkRvYyB2ZXJzaW9uIjoiMi4wLjAiLCJEb2MgTGFuZ3VhZ2UiOiJFbmdsaXNoIiwiRG9jIERpdmlzaW9uIjoiTUNEIiwiRG9jIEJVIjoiSUNXIiwiRG9jIEZhbWlseSI6IlBTT0MifQ==)
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzE0NTEiLCJTcGVjIE51bWJlciI6IjAwMi0zMTQ1MSIsIkRvYyBUaXRsZSI6IkhBTDogQURDIHVzaW5nIEhBTCIsInJpZCI6InZhaXIiLCJEb2MgdmVyc2lvbiI6IjIuMS4wIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IklDVyIsIkRvYyBGYW1pbHkiOiJQU09DIn0=)
 
 
 ## Requirements
@@ -30,12 +30,16 @@ This example also demonstrates the multichannel configuration of the ADC HAL dri
 - [PSoC&trade; 6 Wi-Fi Bluetooth&reg; pioneer kit](https://www.infineon.com/CY8CKIT-062-WIFI-BT) (`CY8CKIT-062-WIFI-BT`)
 - [PSoC&trade; 6 Bluetooth&reg; LE pioneer kit](https://www.infineon.com/CY8CKIT-062-BLE) (`CY8CKIT-062-BLE`)
 - [PSoC&trade; 6 Bluetooth&reg; LE prototyping kit](https://www.infineon.com/CY8CPROTO-063-BLE) (`CY8CPROTO-063-BLE`)
-- [PSoC&trade; 62S2 Wi-Fi Bluetooth&reg; pioneer kit](https://www.infineon.com/CY8CKIT-062S2-43012) (`CY8CKIT-062S2-43012`)
 - [PSoC&trade; 62S1 Wi-Fi Bluetooth&reg; pioneer kit](https://www.infineon.com/CYW9P62S1-43438EVB-01) (`CYW9P62S1-43438EVB-01`)
 - [PSoC&trade; 62S1 Wi-Fi Bluetooth&reg; pioneer kit](https://www.infineon.com/CYW9P62S1-43012EVB-01) (`CYW9P62S1-43012EVB-01`)
+- [PSoC&trade; 62S2 Wi-Fi Bluetooth&reg; pioneer kit](https://www.infineon.com/CY8CKIT-062S2-43012) (`CY8CKIT-062S2-43012`)
 - [PSoC&trade; 62S3 Wi-Fi Bluetooth&reg; prototyping kit](https://www.infineon.com/CY8CPROTO-062S3-4343W) (`CY8CPROTO-062S3-4343W`)
 - [PSoC&trade; 64 "Secure Boot" Wi-Fi Bluetooth&reg; pioneer kit](https://www.infineon.com/CY8CKIT-064B0S2-4343W) (`CY8CKIT-064B0S2-4343W`)
 - [PSoC&trade; 64 Standard Secure - AWS Wi-Fi Bluetooth&reg; pioneer kit](https://www.infineon.com/CY8CKIT-064S0S2-4343W) (`CY8CKIT-064S0S2-4343W`)
+- [PSoC&trade; 64 "Secure Boot" prototyping kit](https://www.infineon.com/CY8CPROTO-064B0S3) (`CY8CPROTO-064B0S3`)
+- [PSoC&trade; 64 "Secure Boot" prototyping kit](https://www.infineon.com/CY8CPROTO-064S1-SB) (`CY8CPROTO-064S1-SB`)
+- [PSoC&trade; 62S4 pioneer kit](https://www.infineon.com/CY8CKIT-062S4) (`CY8CKIT-062S4`)
+- [PSoC&trade; 62S2 evaluation kit](https://www.infineon.com/CY8CEVAL-062S2) (`CY8CEVAL-062S2`, `CY8CEVAL-062S2-LAI-4373M2`, `CY8CEVAL-062S2-MUR-43439M2`)
 
 ## Hardware setup
 
@@ -43,19 +47,24 @@ This example uses the board's default configuration. See the kit user guide to e
 
  **Table 1. Analog input pins configuration**
 
-| Kit  |  Channel 0 input pin     |    Channel 1 input pin     |    Channel 1 voltage reference pin     |    
-| :------- | :------------    | :------------ | :------------ |
-| CY8CPROTO-062-4343W    | P10[0]         | P10[4] | P10[5] |
-| CY8CKIT-062-WIFI-BT    | P10[0]         | P10[4] | P10[5] |
-| CY8CKIT-062-BLE    | P10[0]         | P10[4] | P10[5] |
-| CY8CPROTO-063-BLE    | P10[0]         | P10[4] | P10[5] |
-| CY8CKIT-062S2-43012    | P10[0]         | P10[4] | P10[5] |
-| CY8CKIT-064B0S2-4343W    | P10[0]         | P10[4] | P10[5] |
-| CY8CKIT-064S0S2-4343W    | P10[0]         | P10[4] | P10[5] |
-| CYW9P62S1-43438EVB-01    | P10[0]         | P10[4] | P10[5] |
-| CYW9P62S1-43012EVB-01    | P10[0]         | P10[4] | P10[5] |
-| CY8CPROTO-062S3-4343W    | P10[3]         | P10[4] | P10[5] |
-
+ Kit  |  Channel 0 input pin     |    Channel 1 input pin     |    Channel 1 voltage reference pin  
+ :------- | :------------    | :------------ | :------------
+ CY8CPROTO-062-4343W    | P10[0]         | P10[4] | P10[5]
+ CY8CKIT-062-WIFI-BT    | P10[0]         | P10[4] | P10[5]
+ CY8CKIT-062-BLE    | P10[0]         | P10[4] | P10[5]
+ CY8CPROTO-063-BLE    | P10[0]         | P10[4] | P10[5]
+ CYW9P62S1-43438EVB-01    | P10[0]         | P10[4] | P10[5]
+ CYW9P62S1-43012EVB-01    | P10[0]         | P10[4] | P10[5]
+ CY8CKIT-062S2-43012    | P10[0]         | P10[4] | P10[5]
+ CY8CPROTO-062S3-4343W    | P10[3]         | P10[4] | P10[5]
+ CY8CKIT-064B0S2-4343W    | P10[0]         | P10[4] | P10[5]
+ CY8CKIT-064S0S2-4343W    | P10[0]         | P10[4] | P10[5]
+ CY8CPROTO-064B0S3    | P10[3]         | P10[4] | P10[5]
+ CY8CPROTO-064S1-SB    | P10[0]         | P10[4] | P10[5]
+ CY8CKIT-062S4            | P10[0]         | P10[1] | P10[2]
+ CY8CEVAL-062S2           | P10[0]         | P10[4] | P10[5]
+ CY8CEVAL-062S2-LAI-4373M2    | P10[0]         | P10[4] | P10[5]
+ CY8CEVAL-062S2-MUR-43439M2     | P10[0]         | P10[4] | P10[5]
 
 **Note:** The PSoC&trade; 6 Bluetooth&reg; LE pioneer kit (CY8CKIT-062-BLE) and the PSoC&trade; 6 Wi-Fi Bluetooth&reg; pioneer kit (CY8CKIT-062-WIFI-BT) ship with KitProg2 installed. The ModusToolbox&trade; software requires KitProg3. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the [Firmware Loader](https://github.com/Infineon/Firmware-loader) GitHub repository. If you do not upgrade, you will see an error like "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
 
@@ -90,7 +99,7 @@ Create the project and open it using one of the following:
 
 6. Click **Create** to complete the application creation process.
 
-For more details, see the [Eclipse IDE for ModusToolbox&trade; software user guide](https://www.infineon.com/MTBEclipseIDEUserGuide) (locally available at *{ModusToolbox&trade; software install directory}/docs_{version}/mt_ide_user_guide.pdf*).
+For more details, see the [Eclipse IDE for ModusToolbox&trade; software user guide](https://www.infineon.com/MTBEclipseIDEUserGuide) (locally available at *{ModusToolbox&trade; software install directory}/docs_{version}/mtb_ide_user_guide.pdf*).
 
 </details>
 
@@ -111,10 +120,10 @@ Argument | Description | Required/optional
 
 <br />
 
-The following example will clone the "[mtb-example-psoc6-adc-basic](https://github.com/Infineon/mtb-example-psoc6-adc-basic)" application with the desired name "AdcBasic" configured for the *CY8CPROTO-062-4343W* BSP into the specified working directory, *C:/mtb_projects*:
+The following example clones the "[mtb-example-hal-adc-basic](https://github.com/Infineon/mtb-example-hal-adc-basic)" application with the desired name "AdcBasic" configured for the *CY8CPROTO-062-4343W* BSP into the specified working directory, *C:/mtb_projects*:
 
    ```
-   project-creator-cli --board-id CY8CKIT-062-WIFI-BT --app-id mtb-example-psoc6-adc-basic --user-app-name AdcBasic --target-dir "C:/mtb_projects"
+   project-creator-cli --board-id CY8CPROTO-062-4343W --app-id mtb-example-hal-adc-basic --user-app-name AdcBasic --target-dir "C:/mtb_projects"
    ```
 
 **Note:** The project-creator-cli tool uses the `git clone` and `make getlibs` commands to fetch the repository and import the required libraries. For details, see the "Project creator tools" section of the [ModusToolbox&trade; software user guide](https://www.infineon.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox&trade; software install directory}/docs_{version}/mtb_user_guide.pdf*).
@@ -173,11 +182,11 @@ For a list of supported IDEs and more details, see the "Exporting to IDEs" secti
 
 ## Operation
 
-If using a PSoC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSoC&trade; 64 device must be provisioned with keys and policies before being programmed. Follow the instructions in the ["Secure Boot" SDK user guide](https://www.infineon.com/dgdlac/Infineon-PSoC_64_Secure_MCU_Secure_Boot_SDK_User_Guide-Software-v07_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f8c361a7666) to provision the device. If the kit is already provisioned, copy-paste the keys and policy folder to the application folder.
+If using a PSoC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSoC&trade; 64 device must be provisioned with keys and policies before being programmed. Follow the instructions in the ["Secure Boot" SDK user guide](https://www.infineon.com/dgdlac/Infineon-PSoC_64_Secure_MCU_Secure_Boot_SDK_User_Guide-Software-v07_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0f8c361a7666&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-software) to provision the device. If the kit is already provisioned, copy-paste the keys and policy folder to the application folder.
 
 1. Connect the board to your PC using the provided USB cable through the KitProg3 USB connector.
 
-   **Note:** By default, this application uses the single-channel configuration. In this configuration, one ADC channel is configured in single-ended mode and the channel input is configured to channel 0 input pin which is mentioned in **Table 1**. This application also supports multichannel configuration where two channels are configured; one channel is configured in single-ended mode with input from channel 0 input pin and the second channel configured in differential mode with the two inputs Vplus and Vref mapped to channel 1 input pin and channel 1 voltage reference input pin respectively, pins are mentioned in **Table 1**. To use the multichannel configuration, by changing the `ADC_EXAMPLE_MODE` macro from `SINGLE_CHANNEL` to `MULTI_CHANNEL`.
+   **Note:** By default, this application uses the single-channel configuration. In this configuration, one ADC channel is configured in single-ended mode and the channel input is configured to channel 0 input pin which is mentioned in **Table 1**. This application also supports multichannel configuration where two channels are configured; one channel is configured in single-ended mode with input from channel 0 input pin and the second channel is configured in differential mode with the two inputs Vplus and Vref mapped to channel 1 input pin and channel 1 voltage reference input pin respectively, pins are mentioned in **Table 1**. To use the multichannel configuration, by changing the `ADC_EXAMPLE_MODE` macro from `SINGLE_CHANNEL` to `MULTI_CHANNEL`.
 
 2. Open a terminal program and select the KitProg3 COM port. Set the serial port parameters to 8N1 and 115200 baud.
 
@@ -192,7 +201,7 @@ If using a PSoC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSo
 
    <details><summary><b>Using CLI</b></summary>
 
-     From the terminal, execute the `make program` command to build and program the application using the default toolchain to the default target. The default toolchain and target are specified in the application's Makefile but you can override those values manually:
+     From the terminal, execute the `make program` command to build and program the application using the default toolchain to the default target. The default toolchain is specified in the application's Makefile but you can override this value manually:
       ```
       make program TOOLCHAIN=<toolchain>
       ```
@@ -203,17 +212,17 @@ If using a PSoC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSo
       ```
    </details>
 
-4. After programming, the application starts automatically. Ensure that input voltage is provided at channel 0 input pin which is mentioned in **Table 1**. if single channel configuration is chosen. Confirm that "PSoC&trade; 6 MCU: ADC using HAL"  and the input voltage is displayed on the UART terminal.
+4. After programming, the application starts automatically. Ensure that input voltage is provided at Channel 0 input pin which is mentioned in **Table 1** if a single channel configuration is chosen. Confirm that "HAL: ADC using HAL" and the input voltage are displayed on the UART terminal.
 
     **Figure 1. Terminal output with single-channel configuration**
 
-    ![ Terminal output with single channel](images/single-channel-output.png)
+    ![](images/single-channel-output.png)
 
-5. If multichannel configuration is chosen, ensure that the input voltages are provided at channel 0 input pin and channel 1 input pin, pins are mentioned in **Table 1**. Provide a reference voltage at channel 1 reference voltage input pin which is mentioned in **Table 1**. Confirm that "PSoC&trade; 6 MCU: ADC using HAL"  and the input voltages from the two channels are displayed on the UART terminal.
+5. If the multichannel configuration is chosen, ensure that the input voltages are provided at the Channel 0 input pin and Channel 1 input pin, pins are mentioned in **Table 1**. Provide a reference voltage at Channel 1 reference voltage input pin, which is mentioned in **Table 1**. Confirm that "PSoC&trade; 6 MCU: ADC using HAL"  and the input voltages from the two channels are displayed on the UART terminal.
 
     **Figure 2. Terminal output with multichannel configuration**
 
-    ![Terminal output with multichannel configuration](images/multichannel-output.png)
+    ![](images/multichannel-output.png)
 
 ## Debugging
 
@@ -224,13 +233,13 @@ You can debug the example to step through the code. In the IDE, use the **\<Appl
 
 ## Design and implementation
 
-In this example, the ADC is configured with 12-bit resolution; by default, one channel with 0-VDDA range is configured using HAL. The input voltage is sampled every 200 ms by calling `cyhal_adc_read_uv`; the measured input voltage is displayed on UART terminal.
+In this example, the ADC is configured with a 12-bit resolution; by default, one channel with a 0-VDDA range is configured using HAL. The input voltage is sampled every 200 ms by calling `cyhal_adc_read_uv`; the measured input voltage is displayed on the UART terminal.
 
 This example also supports multichannel configuration. Multichannel configuration can be used by changing the `ADC_EXAMPLE_MODE` macro to `MULTI_CHANNEL`. The ADC is configured to use two channels; Channel 0 is configured in single-ended mode, while Channel 1 is configured in differential mode. The `cyhal_adc_read_async_uv` API function is used to read the results from the two channels asynchronously.
 
-This code example uses a delay of 200 ms between reads for demonstration purpose to print the sampled results on the UART. To achieve sampling at higher rates, remove the delay and use the  `cyhal_adc_set_sample_rate` API function to configure the number of samples per second.
+This code example uses a delay of 200 ms between reads for demonstration purposes to print the sampled results on the UART. To achieve sampling at higher rates, remove the delay and use the  `cyhal_adc_set_sample_rate` API function to configure the number of samples per second.
 
-PSoC&trade; 6 HAL currently restricts mapping of any GPIO pins as input to the ADC. Only pins that have direct connection to the ADC can be used as inputs to the ADC. On all the supported boards, P10_x are the preferred GPIO pins as the input for the ADC because they directly connect to the ADC; therefore, channel 0 input pin is used as the input for the first channel. Channel 1 input pin and channel 1 voltage reference input pin are used for the second channel, pins are mentioned in **Table 1**.
+PSoC&trade; 6 HAL currently restricts the mapping of any GPIO pins as input to the ADC. Only pins that have a direct connection to the ADC can be used as inputs to the ADC. On all the supported boards, P10_x are the preferred GPIO pins as the input for the ADC because they directly connect to the ADC; therefore, Channel 0 input pin is used as the input for the first channel. Channel 1 input pin and Channel 1 voltage reference input pin are used for the second channel, pins are mentioned in **Table 1**.
 
 ## Resources and settings
 
@@ -238,22 +247,24 @@ The following resources are used in this example.
 
  **Table 2. Application resources**
 
-| Resource  |  Alias/object     |    Purpose     |
-| :------- | :------------    | :------------ |
-| ADC (HAL)    | adc_obj         | Analog-to-Digital converter driver |
-| UART (HAL)|cy_retarget_io_uart_obj| UART HAL object used by retarget-io for debug UART port  |
+ Resource  |  Alias/object     |    Purpose
+ :------- | :------------    | :------------
+ ADC (HAL)    | adc_obj         | Analog-to-digital converter driver
+ UART (HAL)|cy_retarget_io_uart_obj| UART HAL object used by retarget-io for debug UART port
+
+<br />
 
 ## Related resources
 
 Resources  | Links
 -----------|----------------------------------
-Application notes  | [AN228571](https://www.infineon.com/AN228571) – Getting started with PSoC&trade; 6 MCU on ModusToolbox&trade; software <br>  [AN215656](https://www.infineon.com/AN215656) – PSoC&trade; 6 MCU: Dual-CPU system design <br> [AN221774](https://www.infineon.com/AN221774) – Getting started with PSoC&trade; 6 MCU on PSoC&trade; Creator <br>  [AN210781](https://www.infineon.com/AN210781) – Getting Started with PSoC&trade; 6 MCU with Bluetooth&reg; Low Energy (BLE) Connectivity on PSoC&trade; Creator
-Code examples  | [Using ModusToolbox&trade; software](https://github.com/Infineon/Code-Examples-for-ModusToolbox-Software) on GitHub
-Device documentation | [PSoC&trade; 6 MCU datasheets](https://www.infineon.com/cms/en/search.html#!view=downloads&term=psoc6&doc_group=Data%20Sheet) <br> [PSoC&trade; 6 technical reference manuals](https://www.infineon.com/cms/en/search.html#!view=downloads&term=psoc6&doc_group=Additional%20Technical%20Information)
-Development kits | Select your kits from the [evaluation board finder](https://www.infineon.com/cms/en/design-support/finder-selection-tools/product-finder/evaluation-board) page.
-Libraries on GitHub  | [mtb-pdl-cat1](https://github.com/Infineon/mtb-pdl-cat1) – PSoC&trade; 6 peripheral driver library (PDL)  <br> [mtb-hal-cat1](https://github.com/Infineon/mtb-hal-cat1) – Hardware abstraction layer (HAL) library <br> [retarget-io](https://github.com/Infineon/retarget-io) – Utility library to retarget STDIO messages to a UART port
-Middleware on GitHub  | [capsense](https://github.com/Infineon/capsense) – CAPSENSE&trade; library and documents <br> [psoc6-middleware](https://github.com/Infineon/modustoolbox-software#psoc-6-middleware-libraries) – Links to all PSoC&trade; 6 MCU middleware
-Tools  | [Eclipse IDE for ModusToolbox&trade; software](https://www.infineon.com/modustoolbox) – ModusToolbox&trade; software is a collection of easy-to-use software and tools enabling rapid development with Infineon MCUs, covering applications from embedded sense and control to wireless and cloud-connected systems using AIROC&trade; Wi-Fi and Bluetooth&reg; connectivity devices.
+Application notes  | [AN228571](https://www.infineon.com/AN228571) – Getting started with PSoC&trade; 6 MCU on ModusToolbox&trade; software <br />  [AN215656](https://www.infineon.com/AN215656) – PSoC&trade; 6 MCU: Dual-CPU system design <br /> [AN221774](https://www.infineon.com/AN221774) – Getting started with PSoC&trade; 6 MCU on PSoC&trade; Creator <br />  [AN210781](https://www.infineon.com/AN210781) – Getting Started with PSoC&trade; 6 MCU with Bluetooth&reg; Low Energy connectivity on PSoC&trade; Creator
+Code examples | [Using ModusToolbox&trade; software](https://github.com/Infineon/Code-Examples-for-ModusToolbox-Software) on GitHub <br /> [Using PSoC&trade; Creator](https://www.infineon.com/cms/en/design-support/tools/sdk/psoc-software/psoc-creator/)
+Device documentation | [PSoC&trade; 6 MCU datasheets](https://www.infineon.com/cms/en/search.html#!view=downloads&term=psoc6&doc_group=Data%20Sheet) <br /> [PSoC&trade; 6 technical reference manuals](https://www.infineon.com/cms/en/search.html#!view=downloads&term=psoc6&doc_group=Additional%20Technical%20Information)
+Development kits | Select your kits from the [Evaluation board finder](https://www.infineon.com/cms/en/design-support/finder-selection-tools/product-finder/evaluation-board) page.
+Libraries on GitHub  | [mtb-pdl-cat1](https://github.com/Infineon/mtb-pdl-cat1) – PSoC&trade; 6 peripheral driver library (PDL)  <br /> [mtb-hal-cat1](https://github.com/Infineon/mtb-hal-cat1) – Hardware abstraction layer (HAL) library <br /> [retarget-io](https://github.com/Infineon/retarget-io) – Utility library to retarget STDIO messages to a UART port
+Middleware on GitHub  | [capsense](https://github.com/Infineon/capsense) – CAPSENSE&trade; library and documents <br /> [psoc6-middleware](https://github.com/Infineon/modustoolbox-software#psoc-6-middleware-libraries) – Links to all PSoC&trade; 6 MCU middleware
+Tools  | [Eclipse IDE for ModusToolbox&trade; software](https://www.infineon.com/modustoolbox) – ModusToolbox&trade; software is a collection of easy-to-use software and tools enabling rapid development with Infineon MCUs, covering applications from embedded sense and control to wireless and cloud-connected systems using AIROC&trade; Wi-Fi and Bluetooth&reg; connectivity devices.. <br /> [PSoC&trade; Creator](https://www.infineon.com/cms/en/design-support/tools/sdk/psoc-software/psoc-creator/) – IDE for PSoC&trade; and FM0+ MCU development
 
 <br />
 
@@ -266,13 +277,14 @@ For PSoC&trade; 6 MCU devices, see [How to design with PSoC&trade; 6 MCU - KBA22
 
 ## Document history
 
-Document Title: *CE231451* - *PSoC&trade; 6 MCU: ADC Using HAL*
+Document title: *CE231451* - *PSoC&trade; 6 MCU: ADC using HAL*
 
-| Version | Description of change |
-| ------- | --------------------- |
-| 1.0.0   | New code example |
-| 1.1.0   | Added support for new kits |
-| 2.0.0   | Major update to support ModusToolbox&trade; v3.0. This version is not backward compatible with previous versions of ModusToolbox&trade; |
+ Version | Description of change
+ ------- | ---------------------
+ 1.0.0   | New code example
+ 1.1.0   | Added support for new kits
+ 2.0.0   | Major update to support ModusToolbox&trade; v3.0. This version is not backward compatible with previous versions of ModusToolbox&trade;
+ 2.1.0   | Added support for CY8CKIT-062S4, CY8CEVAL-062S2, CY8CEVAL-062S2-LAI-4373M2, CY8CEVAL-062S2-MUR-43439M2, CY8CPROTO-064B0S3, and CY8CPROTO-064S1-SB
 
 <br />
 
@@ -283,4 +295,4 @@ Document Title: *CE231451* - *PSoC&trade; 6 MCU: ADC Using HAL*
 <br />
 TO THE EXTENT PERMITTED BY APPLICABLE LAW, CYPRESS MAKES NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH REGARD TO THIS DOCUMENT OR ANY SOFTWARE OR ACCOMPANYING HARDWARE, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  No computing device can be absolutely secure.  Therefore, despite security measures implemented in Cypress hardware or software products, Cypress shall have no liability arising out of any security breach, such as unauthorized access to or use of a Cypress product. CYPRESS DOES NOT REPRESENT, WARRANT, OR GUARANTEE THAT CYPRESS PRODUCTS, OR SYSTEMS CREATED USING CYPRESS PRODUCTS, WILL BE FREE FROM CORRUPTION, ATTACK, VIRUSES, INTERFERENCE, HACKING, DATA LOSS OR THEFT, OR OTHER SECURITY INTRUSION (collectively, "Security Breach").  Cypress disclaims any liability relating to any Security Breach, and you shall and hereby do release Cypress from any claim, damage, or other liability arising from any Security Breach.  In addition, the products described in these materials may contain design defects or errors known as errata which may cause the product to deviate from published specifications. To the extent permitted by applicable law, Cypress reserves the right to make changes to this document without further notice. Cypress does not assume any liability arising out of the application or use of any product or circuit described in this document. Any information provided in this document, including any sample design information or programming code, is provided only for reference purposes.  It is the responsibility of the user of this document to properly design, program, and test the functionality and safety of any application made of this information and any resulting product.  "High-Risk Device" means any device or system whose failure could cause personal injury, death, or property damage.  Examples of High-Risk Devices are weapons, nuclear installations, surgical implants, and other medical devices.  "Critical Component" means any component of a High-Risk Device whose failure to perform can be reasonably expected to cause, directly or indirectly, the failure of the High-Risk Device, or to affect its safety or effectiveness.  Cypress is not liable, in whole or in part, and you shall and hereby do release Cypress from any claim, damage, or other liability arising from any use of a Cypress product as a Critical Component in a High-Risk Device. You shall indemnify and hold Cypress, including its affiliates, and its directors, officers, employees, agents, distributors, and assigns harmless from and against all claims, costs, damages, and expenses, arising out of any claim, including claims for product liability, personal injury or death, or property damage arising from any use of a Cypress product as a Critical Component in a High-Risk Device. Cypress products are not intended or authorized for use as a Critical Component in any High-Risk Device except to the limited extent that (i) Cypress’s published data sheet for the product explicitly states Cypress has qualified the product for use in a specific High-Risk Device, or (ii) Cypress has given you advance written authorization to use the product as a Critical Component in the specific High-Risk Device and you have signed a separate indemnification agreement.
 <br />
-Cypress, the Cypress logo, and combinations thereof, WICED, ModusToolbox, PSoC, CapSense, EZ-USB, F-RAM, and Traveo are trademarks or registered trademarks of Cypress or a subsidiary of Cypress in the United States or in other countries. For a more complete list of Cypress trademarks, visit cypress.com. Other names and brands may be claimed as property of their respective owners.
+Cypress, the Cypress logo, and combinations thereof, WICED, ModusToolbox, PSoC, CapSense, EZ-USB, F-RAM, and Traveo are trademarks or registered trademarks of Cypress or a subsidiary of Cypress in the United States or in other countries. For a more complete list of Cypress trademarks, visit www.infineon.com. Other names and brands may be claimed as property of their respective owners.

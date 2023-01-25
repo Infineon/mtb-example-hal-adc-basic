@@ -9,7 +9,7 @@
 *
 *
 *******************************************************************************
-* Copyright 2020-2022, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2020-2023, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -65,7 +65,7 @@
  */
 #define ADC_EXAMPLE_MODE SINGLE_CHANNEL
 
-#if defined(CY_DEVICE_PSOC6A512K)  /* if the target is CY8CPROTO-062S3-4343W */
+#if defined(CY_DEVICE_PSOC6A512K)  /* if the target is CY8CPROTO-062S3-4343W or CY8CPROTO-064B0S3*/
 /* Channel 0 input pin */
 #define VPLUS_CHANNEL_0  (P10_3)
 #else 
@@ -74,11 +74,17 @@
 
 #if ADC_EXAMPLE_MODE == MULTI_CHANNEL
 
+#if defined(CY_DEVICE_PSOC6A256K)  /* if the target is CY8CKIT-062S4 */
+/* Channel 1 VPLUS input pin */
+#define VPLUS_CHANNEL_1  (P10_1)
+/* Channel 1 VREF input pin */
+#define VREF_CHANNEL_1   (P10_2)
+#else 
 /* Channel 1 VPLUS input pin */
 #define VPLUS_CHANNEL_1  (P10_4)
-
 /* Channel 1 VREF input pin */
 #define VREF_CHANNEL_1   (P10_5)
+#endif
 
 /* Number of scans every time ADC read is initiated */
 #define NUM_SCAN                    (1)
@@ -215,7 +221,7 @@ int main(void)
     /* \x1b[2J\x1b[;H - ANSI ESC sequence for clear screen */
     printf("\x1b[2J\x1b[;H");
     printf("-----------------------------------------------------------\r\n");
-    printf("PSoC 6 MCU: ADC using HAL\r\n");
+    printf("HAL: ADC using HAL\r\n");
     printf("-----------------------------------------------------------\r\n\n");
 
 #if ADC_EXAMPLE_MODE == MULTI_CHANNEL
