@@ -9,7 +9,7 @@
 *
 *
 *******************************************************************************
-* Copyright 2020-2023, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2020-2024, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -92,7 +92,7 @@
 #endif /* ADC_EXAMPLE_MODE == MULTI_CHANNEL */
 
 /* Conversion factor */
-#define MICRO_TO_MILLI_CONV_RATIO        (1000u)
+#define MICRO_TO_MILLI_CONV_RATIO        (int32_t)(1000u)
 
 /* Acquistion time in nanosecond */
 #define ACQUISITION_TIME_NS              (1000u)
